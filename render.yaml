@@ -3,7 +3,7 @@ services:
     name: dogsTOOLomg
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: cd quantum_hermetic_gematria && gunicorn --chdir . --config ../gunicorn.conf.py app:app
+    startCommand: gunicorn --chdir quantum_hermetic_gematria app:app
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.7
