@@ -1,15 +1,15 @@
 services:
   - type: web
-    name: quantum-hermetic-gematria
+    name: dogsTOOLomg
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: cd quantum_hermetic_gematria && python -m gunicorn --bind 0.0.0.0:10000 app:app
+    startCommand: cd quantum_hermetic_gematria && gunicorn --chdir . --config ../gunicorn.conf.py app:app
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.7
-      - key: FLASK_ENV
-        value: production
+      - key: PYTHONPATH
+        value: quantum_hermetic_gematria
       - key: PORT
         value: 10000
-      - key: PYTHONPATH
-        value: . 
+      - key: FLASK_ENV
+        value: production 
