@@ -3,11 +3,13 @@ services:
     name: quantum-hermetic-gematria
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: cd quantum_hermetic_gematria && gunicorn app:app
+    startCommand: cd quantum_hermetic_gematria && python -m gunicorn --bind 0.0.0.0:10000 app:app
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.7
       - key: FLASK_ENV
         value: production
+      - key: PORT
+        value: 10000
       - key: PYTHONPATH
-        value: quantum_hermetic_gematria 
+        value: . 
