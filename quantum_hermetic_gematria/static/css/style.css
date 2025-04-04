@@ -30,6 +30,7 @@ body {
 header {
     text-align: center;
     margin-bottom: 2rem;
+    position: relative;
 }
 
 h1 {
@@ -106,6 +107,22 @@ button:hover {
     transform: translateY(-2px);
 }
 
+.info-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: auto;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    background-color: var(--primary-color);
+    opacity: 0.8;
+}
+
+.info-btn:hover {
+    opacity: 1;
+}
+
 .results-container {
     background-color: var(--card-background);
     border-radius: 15px;
@@ -132,7 +149,14 @@ button:hover {
 }
 
 .metric-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.metric-group h4 {
+    color: var(--primary-color);
+    border-bottom: 1px solid rgba(44, 62, 80, 0.1);
+    padding-bottom: 0.3rem;
+    margin-bottom: 0.7rem;
 }
 
 .metric-label {
@@ -142,6 +166,7 @@ button:hover {
 
 .metric-value {
     color: var(--accent-color);
+    font-weight: 600;
 }
 
 .recommendations {
@@ -163,6 +188,144 @@ button:hover {
 .timestamp {
     font-size: 0.8rem;
     color: #7f8c8d;
+}
+
+/* Energy bars */
+.energy-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.energy-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.energy-label {
+    width: 100px;
+    font-size: 0.9rem;
+    color: var(--primary-color);
+}
+
+.bar-container {
+    flex-grow: 1;
+    height: 10px;
+    background-color: rgba(44, 62, 80, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background-color: var(--secondary-color);
+    border-radius: 5px;
+}
+
+.energy-value {
+    width: 40px;
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--primary-color);
+}
+
+/* Info Icons */
+.info-icon {
+    font-size: 0.9rem;
+    cursor: help;
+    position: relative;
+    margin-left: 0.3rem;
+}
+
+.tooltip-text {
+    position: absolute;
+    z-index: 10;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.7rem;
+    border-radius: 5px;
+    width: 250px;
+    font-size: 0.8rem;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+}
+
+.tooltip-text::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--primary-color) transparent transparent transparent;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: var(--card-background);
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: 15px;
+    width: 80%;
+    max-width: 800px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    right: 1.5rem;
+    top: 1rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+.formula-visualization {
+    margin-top: 1.5rem;
+}
+
+.formula-step {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(44, 62, 80, 0.1);
+}
+
+.formula-step:last-child {
+    border-bottom: none;
+}
+
+.formula-step h3 {
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+}
+
+.formula-code {
+    background-color: rgba(44, 62, 80, 0.05);
+    padding: 1rem;
+    border-radius: 5px;
+    font-family: monospace;
+    margin-top: 0.5rem;
+    color: var(--accent-color);
 }
 
 @keyframes fadeIn {
@@ -197,6 +360,27 @@ button:hover {
 
     .results-scroll {
         max-height: 70vh;
+    }
+    
+    .info-btn {
+        position: relative;
+        display: block;
+        margin: 0.5rem auto;
+        width: 150px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+        padding: 1rem;
+    }
+    
+    .energy-bar {
+        flex-wrap: wrap;
+    }
+    
+    .energy-label {
+        width: 80px;
     }
 }
 

@@ -85,6 +85,38 @@ class QuantumHermeticGematria:
         quality_index = (len(text) + sum(ord(c) for c in text)) % len(qualities)
         geometry_index = (abs(hash(text)) // 100) % len(geometries)
         
+        # Generate explanations for each score
+        explanations = {
+            "quantum_resonance": "Measures the vibrational coherence of the phrase in quantum information space. Higher values indicate stronger resonance with fundamental universal patterns.",
+            "pattern_significance": "Indicates how strongly this phrase connects to archetypal patterns. Higher values suggest greater alignment with hermetic principles.",
+            "primary_pattern": {
+                "harmonic_resonance": "Shows alignment with natural harmonic sequences, suggesting balance and flow.",
+                "quantum_entanglement": "Indicates non-local connections across conceptual space-time.",
+                "sacred_geometry": "Reveals alignment with fundamental geometric structures of creation.",
+                "hermetic_symmetry": "Demonstrates balance across multiple hermetic principles.",
+                "vibrational_matrix": "Shows strong connection to the underlying vibrational fabric of reality."
+            },
+            "resonance_quality": {
+                "Strong": "Clear and powerful resonance that manifests consistently.",
+                "Moderate": "Balanced resonance with noticeable but not overwhelming effects.",
+                "Subtle": "Delicate resonance that works through nuance and refinement.",
+                "Profound": "Deep resonance that affects fundamental levels of reality.",
+                "Complex": "Multi-layered resonance with intricate patterns of manifestation."
+            },
+            "geometric_harmony": {
+                "vesica_piscis": "The sacred intersection of dualities, representing creation and divine feminine energy.",
+                "golden_spiral": "The pattern of perfect growth and proportion found throughout nature.",
+                "metatron_cube": "The geometric blueprint containing all Platonic solids and creation patterns.",
+                "flower_of_life": "The fundamental pattern of creation containing all geometric forms.",
+                "merkaba": "The light-spirit-body vehicle representing balanced energy fields."
+            }
+        }
+        
+        # Select specific explanations based on the generated values
+        selected_pattern = patterns[pattern_index]
+        selected_quality = qualities[quality_index]
+        selected_geometry = geometries[geometry_index]
+        
         return {
             "text": text,
             "numerical_value": numerical_value,
@@ -98,13 +130,20 @@ class QuantumHermeticGematria:
             },
             "patterns": {},
             "interpretation": {
-                "primary_pattern": patterns[pattern_index],
-                "resonance_quality": qualities[quality_index],
-                "geometric_harmony": geometries[geometry_index],
+                "primary_pattern": selected_pattern,
+                "resonance_quality": selected_quality,
+                "geometric_harmony": selected_geometry,
                 "hermetic_influence": "vibration"
             },
             "pattern_significance": pattern_significance,
-            "vector": vector.tolist()
+            "vector": vector.tolist(),
+            "explanations": {
+                "quantum_resonance": explanations["quantum_resonance"],
+                "pattern_significance": explanations["pattern_significance"],
+                "primary_pattern": explanations["primary_pattern"][selected_pattern],
+                "resonance_quality": explanations["resonance_quality"][selected_quality],
+                "geometric_harmony": explanations["geometric_harmony"][selected_geometry]
+            }
         }
     
     def compare_phrases(self, phrase1, phrase2):
