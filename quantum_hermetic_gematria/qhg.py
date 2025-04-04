@@ -285,7 +285,225 @@ class QuantumHermeticGematria:
         # Calculate cosine similarity
         similarity = torch.dot(vec1, vec2)
         return similarity.item()
+    
+    def analyze_text(self, text):
+        """Analyze text using quantum hermetic principles"""
+        # Calculate quantum vector
+        quantum_vector = self.calculate(text)
         
+        # Generate numerical value (sum of components)
+        numerical_value = int(torch.sum(quantum_vector * 100).item())
+        
+        # Calculate "quantum resonance" (norm of vector)
+        quantum_resonance = float(torch.norm(quantum_vector).item())
+        
+        # Calculate energetic properties (using vector components)
+        energetic_properties = {
+            "harmony": float(abs(quantum_vector[0]).item()),
+            "power": float(abs(quantum_vector[1]).item()),
+            "intelligence": float(abs(quantum_vector[2]).item()),
+            "creativity": float(abs(quantum_vector[3]).item()),
+            "balance": float(abs(quantum_vector[4]).item())
+        }
+        
+        # Identify patterns
+        patterns = self._detect_patterns(quantum_vector)
+        
+        # Create interpretation
+        interpretation = self._generate_interpretation(energetic_properties, patterns)
+        
+        # Return complete analysis
+        return {
+            "text": text,
+            "numerical_value": numerical_value,
+            "quantum_resonance": quantum_resonance,
+            "energetic_properties": energetic_properties,
+            "patterns": patterns,
+            "interpretation": interpretation,
+            "vector": quantum_vector.tolist()
+        }
+    
+    def compare_phrases(self, phrase1, phrase2):
+        """Compare two phrases using quantum hermetic gematria"""
+        # Calculate individual vectors
+        vec1 = self.calculate(phrase1)
+        vec2 = self.calculate(phrase2)
+        
+        # Calculate similarity (cosine similarity)
+        similarity = self.calculate_similarity(phrase1, phrase2)
+        
+        # Calculate compatibility score (0-100)
+        compatibility = int((similarity + 1) * 50)  # Convert from [-1,1] to [0,100]
+        
+        # Calculate resonance patterns
+        resonance_patterns = self._calculate_resonance(vec1, vec2)
+        
+        # Calculate energetic interactions
+        energetic_interactions = self._calculate_interactions(vec1, vec2)
+        
+        # Generate interpretation
+        interpretation = self._generate_comparison_interpretation(similarity, resonance_patterns)
+        
+        # Return comparison results
+        return {
+            "phrase1": phrase1,
+            "phrase2": phrase2,
+            "similarity": similarity,
+            "compatibility": compatibility,
+            "resonance_patterns": resonance_patterns,
+            "energetic_interactions": energetic_interactions,
+            "interpretation": interpretation
+        }
+    
+    def _detect_patterns(self, vector):
+        """Detect patterns in the quantum vector"""
+        patterns = {}
+        
+        # Pattern detection based on vector statistics
+        mean = float(torch.mean(vector).item())
+        std = float(torch.std(vector).item())
+        
+        # Detect balance pattern
+        if std < 0.3:
+            patterns["balanced_energy"] = float(1 - std)
+        
+        # Detect intensity pattern
+        max_val = float(torch.max(torch.abs(vector)).item())
+        if max_val > 0.6:
+            patterns["intensity"] = float(max_val)
+        
+        # Detect harmony pattern
+        positive_ratio = float((vector > 0).sum().item() / len(vector))
+        if 0.4 <= positive_ratio <= 0.6:
+            patterns["harmonic"] = float(1 - abs(positive_ratio - 0.5) * 2)
+        
+        # Detect resonance pattern
+        if torch.abs(torch.mean(vector[0:3]) - torch.mean(vector[3:6])).item() < 0.1:
+            patterns["resonant"] = float(0.8)
+        
+        return patterns
+    
+    def _generate_interpretation(self, properties, patterns):
+        """Generate an interpretation based on properties and patterns"""
+        # Find the dominant property
+        dominant_property = max(properties.items(), key=lambda x: x[1])[0]
+        
+        # Find dominant pattern
+        dominant_pattern = max(patterns.items(), key=lambda x: x[1])[0] if patterns else None
+        
+        # Base interpretation on dominant property
+        interpretations = {
+            "harmony": "This text resonates with harmonic energies, promoting balance and peace.",
+            "power": "This text carries a powerful energetic signature, emphasizing strength and transformation.",
+            "intelligence": "This text aligns with intellectual and analytical energies, enhancing clarity of thought.",
+            "creativity": "This text embodies creative energies, inspiring imagination and innovation.",
+            "balance": "This text represents balanced energies, supporting wholeness and integration."
+        }
+        
+        # Basic interpretation
+        interpretation = interpretations.get(dominant_property, "This text has a unique quantum signature.")
+        
+        # Add pattern information if available
+        if dominant_pattern:
+            pattern_desc = {
+                "balanced_energy": "The energies are evenly distributed, creating a stable and balanced field.",
+                "intensity": "There is a concentrated point of energy, suggesting intensity and focus.",
+                "harmonic": "The pattern shows harmonic oscillation between complementary energies.",
+                "resonant": "There is a resonant field that amplifies the core qualities."
+            }
+            interpretation += " " + pattern_desc.get(dominant_pattern, "")
+        
+        return interpretation
+    
+    def _calculate_resonance(self, vec1, vec2):
+        """Calculate resonance patterns between two vectors"""
+        # Initialize resonance patterns
+        resonance = {}
+        
+        # Calculate different types of resonance
+        
+        # Constructive resonance (sum of vectors)
+        constructive = torch.norm(vec1 + vec2).item()
+        if constructive > 1.2:
+            resonance["constructive"] = float(constructive - 1)
+        
+        # Harmonic resonance (dot product)
+        harmonic = torch.dot(vec1, vec2).item()
+        if harmonic > 0.3:
+            resonance["harmonic"] = float(harmonic)
+        
+        # Complementary resonance (orthogonal components)
+        complementary = 1 - abs(harmonic)
+        if complementary > 0.5:
+            resonance["complementary"] = float(complementary)
+        
+        # Entropic resonance (difference in entropy)
+        p1 = torch.nn.functional.softmax(vec1, dim=0)
+        p2 = torch.nn.functional.softmax(vec2, dim=0)
+        ent1 = -torch.sum(p1 * torch.log(p1 + 1e-10)).item()
+        ent2 = -torch.sum(p2 * torch.log(p2 + 1e-10)).item()
+        entropic = 1 - abs(ent1 - ent2)
+        if entropic > 0.7:
+            resonance["entropic"] = float(entropic)
+        
+        return resonance
+    
+    def _calculate_interactions(self, vec1, vec2):
+        """Calculate energetic interactions between two vectors"""
+        # Calculate various interactions
+        interactions = {}
+        
+        # Amplification (where both vectors have same sign and are strong)
+        amp = (vec1 * vec2)
+        amplification = float(torch.sum((amp > 0.05)).item() / len(amp))
+        if amplification > 0.3:
+            interactions["amplification"] = amplification
+        
+        # Interference (where vectors have opposite signs)
+        interference = float(torch.sum((vec1 * vec2 < -0.05)).item() / len(vec1))
+        if interference > 0.2:
+            interactions["interference"] = interference
+        
+        # Harmony (smooth distribution of combined energy)
+        combined = vec1 + vec2
+        std_combined = torch.std(combined).item()
+        harmony = 1 - min(std_combined, 1)
+        if harmony > 0.6:
+            interactions["harmony"] = float(harmony)
+        
+        # Synergy (combined vector stronger than individual ones)
+        synergy = torch.norm(combined).item() - (torch.norm(vec1).item() + torch.norm(vec2).item()) / 2
+        if synergy > 0.1:
+            interactions["synergy"] = float(synergy)
+        
+        return interactions
+    
+    def _generate_comparison_interpretation(self, similarity, resonance):
+        """Generate interpretation for comparison"""
+        # Base interpretation on similarity
+        if similarity > 0.8:
+            interpretation = "These phrases are in exceptional quantum alignment, revealing profound conceptual resonance."
+        elif similarity > 0.5:
+            interpretation = "These phrases share significant energetic harmony, indicating compatible concepts."
+        elif similarity > 0.2:
+            interpretation = "These phrases have moderate resonance, with some shared qualities and some differences."
+        elif similarity > -0.2:
+            interpretation = "These phrases have limited harmonic connection, suggesting mostly independent concepts."
+        elif similarity > -0.5:
+            interpretation = "These phrases show some energetic opposition, representing contrasting concepts."
+        else:
+            interpretation = "These phrases demonstrate strong energetic opposition, potentially representing opposing forces."
+        
+        # Add resonance patterns if present
+        if "constructive" in resonance:
+            interpretation += " There is strong constructive resonance, suggesting these concepts amplify each other."
+        elif "harmonic" in resonance:
+            interpretation += " Harmonic resonance is present, indicating natural alignment between these concepts."
+        elif "complementary" in resonance:
+            interpretation += " There is complementary resonance, suggesting these concepts complete each other."
+        
+        return interpretation
+    
     def visualize(self, text, dimensions=(0, 1)):
         """Visualize the quantum gematria for a text in 2D"""
         vector = self.calculate(text)
