@@ -3,7 +3,7 @@ services:
     name: dogsTOOLomg
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: cd quantum_hermetic_gematria && PYTHONPATH=/opt/render/project/src/quantum_hermetic_gematria gunicorn app:app --bind 0.0.0.0:$PORT
+    startCommand: PYTHONPATH=/opt/render/project/src gunicorn wsgi:app --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.7
