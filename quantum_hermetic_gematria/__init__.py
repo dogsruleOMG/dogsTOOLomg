@@ -1,1 +1,1 @@
-# This file makes the quantum_hermetic_gematria directory a Python package 
+# This file marks the quantum_hermetic_gematria directory as a Python package 
