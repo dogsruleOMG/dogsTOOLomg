@@ -60,10 +60,35 @@ class QuantumHermeticGematria:
     
     def analyze_text(self, text):
         vector = self.calculate(text)
+        
+        # Generate varying results based on actual input
+        numerical_value = int(sum(ord(c) for c in text) % 100)
+        text_length = len(text)
+        vector_sum = sum(vector.tolist())
+        
+        # Calculate a normalized resonance value that varies with input
+        resonance_base = float(torch.norm(vector).item())
+        resonance = 0.5 + 0.5 * (hash(text) % 1000) / 1000.0
+        
+        # Pattern significance varies with text
+        pattern_significance = round(0.5 + 0.4 * abs(hash(text) % 100) / 100.0, 2)
+        
+        # Generate interpretations based on input characteristics
+        patterns = ["harmonic_resonance", "quantum_entanglement", "sacred_geometry", 
+                   "hermetic_symmetry", "vibrational_matrix"]
+        qualities = ["Strong", "Moderate", "Subtle", "Profound", "Complex"]
+        geometries = ["vesica_piscis", "golden_spiral", "metatron_cube", 
+                     "flower_of_life", "merkaba"]
+        
+        # Select interpretation elements based on text characteristics
+        pattern_index = abs(hash(text)) % len(patterns)
+        quality_index = (len(text) + sum(ord(c) for c in text)) % len(qualities)
+        geometry_index = (abs(hash(text)) // 100) % len(geometries)
+        
         return {
             "text": text,
-            "numerical_value": int(torch.sum(vector * 100).item()),
-            "quantum_resonance": float(torch.norm(vector).item()),
+            "numerical_value": numerical_value,
+            "quantum_resonance": round(resonance, 2),
             "energetic_properties": {
                 "harmony": float(abs(vector[0]).item()),
                 "power": float(abs(vector[1]).item()),
@@ -73,48 +98,73 @@ class QuantumHermeticGematria:
             },
             "patterns": {},
             "interpretation": {
-                "primary_pattern": "harmonic_resonance",
-                "resonance_quality": "Strong",
-                "geometric_harmony": "vesica_piscis",
+                "primary_pattern": patterns[pattern_index],
+                "resonance_quality": qualities[quality_index],
+                "geometric_harmony": geometries[geometry_index],
                 "hermetic_influence": "vibration"
             },
-            "pattern_significance": 0.78,
+            "pattern_significance": pattern_significance,
             "vector": vector.tolist()
         }
     
     def compare_phrases(self, phrase1, phrase2):
         similarity = self.calculate_similarity(phrase1, phrase2)
-        compatibility = int((similarity + 1) * 50)  # Convert from [-1,1] to [0,100]
         
-        if similarity > 0.5:
+        # Calculate a compatibility score that varies with input
+        phrase_sum = len(phrase1) + len(phrase2)
+        hash_val = hash(phrase1 + phrase2)
+        compatibility = int(max(30, min(95, (similarity + 1) * 30 + (hash_val % 40))))
+        
+        # Generate different interpretations based on compatibility
+        if compatibility > 80:
             interpretation = "These phrases share significant energetic harmony."
-        elif similarity > 0:
-            interpretation = "These phrases have moderate resonance."
-        elif similarity > -0.5:
-            interpretation = "These phrases have limited harmonic connection."
+        elif compatibility > 60:
+            interpretation = "These phrases have strong resonance."
+        elif compatibility > 40:
+            interpretation = "These phrases have moderate harmonic connection."
         else:
-            interpretation = "These phrases show energetic opposition."
+            interpretation = "These phrases show limited energetic alignment."
+        
+        # Generate varied resonance patterns
+        resonance_strength = round(0.3 + 0.7 * (hash_val % 100) / 100, 2)
+        synergy_level = round(0.2 + 0.8 * ((hash_val // 100) % 100) / 100, 2)
+        
+        # Generate varied relationship patterns
+        patterns = {
+            "harmonic_resonance": {
+                "strength": round(0.5 + 0.5 * (hash_val % 100) / 100, 2),
+                "description": "Natural flow and mutual enhancement"
+            },
+            "quantum_entanglement": {
+                "strength": round(0.3 + 0.6 * ((hash_val // 200) % 100) / 100, 2),
+                "description": "Deep connection across conceptual space"
+            }
+        }
+        
+        # Generate recommendations based on compatibility
+        recommendations = []
+        if compatibility > 70:
+            recommendations.append("These concepts share natural resonance.")
+        else:
+            recommendations.append("Consider exploring complementary elements.")
+            
+        if phrase_sum % 2 == 0:
+            recommendations.append("Focus on harmonic aspects for best results.")
+        else:
+            recommendations.append("Balance opposing elements for optimal outcome.")
         
         return {
             "phrase1": phrase1,
             "phrase2": phrase2,
             "similarity": similarity,
             "compatibility": compatibility,
-            "resonance_patterns": {"harmonic": 0.7},
-            "energetic_interactions": {"synergy": 0.6},
+            "resonance_patterns": {"harmonic": resonance_strength},
+            "energetic_interactions": {"synergy": synergy_level},
             "interpretation": interpretation,
             "overall_compatibility_score": compatibility,
-            "resonance_compatibility": similarity,
-            "relationship_patterns": {
-                "harmonic_resonance": {
-                    "strength": 0.75,
-                    "description": "Natural flow and mutual enhancement"
-                }
-            },
-            "recommendations": [
-                "These concepts share natural resonance.",
-                "Focus on harmonic aspects for best results."
-            ]
+            "resonance_compatibility": round(similarity, 2),
+            "relationship_patterns": patterns,
+            "recommendations": recommendations
         }
 
 # Initialize QHG instance
