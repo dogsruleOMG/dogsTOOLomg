@@ -5,12 +5,17 @@ import sys
 import logging
 
 # Configure logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG, 
+                   format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 # Add the current directory to the Python path
 logger.debug(f"Current directory: {os.path.dirname(os.path.abspath(__file__))}")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# Set environment variables
+os.environ['FLASK_ENV'] = 'production'
+os.environ['FLASK_DEBUG'] = '1'
 
 # Log Python path for debugging
 logger.debug(f"Python path: {sys.path}")
@@ -19,6 +24,12 @@ try:
     # Import Flask app
     logger.debug("Importing app from quantum_hermetic_gematria.app")
     from quantum_hermetic_gematria.app import app
+    
+    # Print available routes for debugging
+    logger.debug("Available routes:")
+    for rule in app.url_map.iter_rules():
+        logger.debug(f"Route: {rule.endpoint} - {rule}")
+    
     logger.debug("Successfully imported app")
 except Exception as e:
     logger.error(f"Error importing app: {str(e)}", exc_info=True)
@@ -28,4 +39,4 @@ except Exception as e:
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     logger.debug(f"Starting app on port {port}")
-    app.run(host="0.0.0.0", port=port) 
+    app.run(host="0.0.0.0", port=port, debug=True) 

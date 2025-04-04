@@ -1,22 +1,31 @@
 import os
 import torch
 import numpy as np
-from flask import Flask, render_template, request, jsonify, session, send_from_directory
+from flask import Flask, render_template, request, jsonify, session, send_from_directory, url_for
 import json
 from datetime import datetime
 import logging
+import traceback
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# Create the Flask app
-app = Flask(__name__)
+# Create the Flask app with explicit static folder
+current_dir = os.path.dirname(os.path.abspath(__file__))
+static_folder = os.path.join(current_dir, 'static')
+template_folder = os.path.join(current_dir, 'templates')
+
+app = Flask(__name__, 
+            static_folder=static_folder, 
+            static_url_path='/static',
+            template_folder=template_folder)
 app.secret_key = os.urandom(24)  # For session management
 
 # Debug info
 logger.debug(f"App instance created. Static folder: {app.static_folder}")
 logger.debug(f"Template folder: {app.template_folder}")
+logger.debug(f"Static URL path: {app.static_url_path}")
 
 # Simple QuantumHermeticGematria implementation
 class QuantumHermeticGematria:
@@ -116,10 +125,15 @@ def index():
     logger.debug("Rendering index.html")
     return render_template('index.html')
 
-@app.route('/static/<path:path>')
-def serve_static(path):
-    logger.debug(f"Serving static file: {path}")
-    return send_from_directory(app.static_folder, path)
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    logger.debug(f"Serving static file: {filename} from {app.static_folder}")
+    try:
+        return send_from_directory(app.static_folder, filename)
+    except Exception as e:
+        logger.error(f"Error serving static file {filename}: {str(e)}")
+        logger.error(traceback.format_exc())
+        return f"Error serving static file: {str(e)}", 404
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
@@ -129,6 +143,10 @@ def analyze():
         logger.debug(f"Received data: {data}")
         text = data.get('text', '')
         
+        if not text:
+            logger.warning("Empty text received")
+            return jsonify({"error": "No text provided"}), 400
+            
         # Perform analysis
         result = qhg.analyze_text(text)
         logger.debug(f"Analysis result: {result}")
@@ -147,8 +165,9 @@ def analyze():
         
         return jsonify(result)
     except Exception as e:
-        logger.error(f"Error in analyze: {str(e)}", exc_info=True)
-        return jsonify({"error": str(e)}), 500
+        logger.error(f"Error in analyze: {str(e)}")
+        logger.error(traceback.format_exc())
+        return jsonify({"error": str(e), "stack": traceback.format_exc()}), 500
 
 @app.route('/compare', methods=['POST'])
 def compare():
@@ -158,6 +177,10 @@ def compare():
         logger.debug(f"Received data: {data}")
         phrase1 = data.get('phrase1', '')
         phrase2 = data.get('phrase2', '')
+        
+        if not phrase1 or not phrase2:
+            logger.warning("Empty phrases received")
+            return jsonify({"error": "Both phrases are required"}), 400
         
         # Perform comparison
         result = qhg.compare_phrases(phrase1, phrase2)
@@ -178,8 +201,9 @@ def compare():
         
         return jsonify(result)
     except Exception as e:
-        logger.error(f"Error in compare: {str(e)}", exc_info=True)
-        return jsonify({"error": str(e)}), 500
+        logger.error(f"Error in compare: {str(e)}")
+        logger.error(traceback.format_exc())
+        return jsonify({"error": str(e), "stack": traceback.format_exc()}), 500
 
 @app.route('/history')
 def history():
@@ -192,8 +216,9 @@ def history():
         logger.debug(f"History data: {history_data}")
         return jsonify(history_data)
     except Exception as e:
-        logger.error(f"Error in history: {str(e)}", exc_info=True)
-        return jsonify({"error": str(e)}), 500
+        logger.error(f"Error in history: {str(e)}")
+        logger.error(traceback.format_exc())
+        return jsonify({"error": str(e), "stack": traceback.format_exc()}), 500
 
 @app.route('/clear_history', methods=['POST'])
 def clear_history():
@@ -202,8 +227,9 @@ def clear_history():
         session.clear()
         return jsonify({'status': 'success'})
     except Exception as e:
-        logger.error(f"Error in clear_history: {str(e)}", exc_info=True)
-        return jsonify({"error": str(e)}), 500
+        logger.error(f"Error in clear_history: {str(e)}")
+        logger.error(traceback.format_exc())
+        return jsonify({"error": str(e), "stack": traceback.format_exc()}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
