@@ -1,8 +1,9 @@
+import os
+import math
 from flask import Flask, render_template, request, jsonify, session
-from qhg import QuantumHermeticGematria
+from .qhg import QuantumHermeticGematria
 import json
 from datetime import datetime
-import os
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # For session management
