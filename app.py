@@ -1,4 +1,4 @@
-# This is a simple WSGI file that imports the Flask app from the quantum_hermetic_gematria directory
+# WSGI entry point for Gunicorn
 
 import os
 import sys
@@ -9,34 +9,30 @@ logging.basicConfig(level=logging.DEBUG,
                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Add the current directory to the Python path
-logger.debug(f"Current directory: {os.path.dirname(os.path.abspath(__file__))}")
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Add current directory to path
+base_dir = os.path.dirname(os.path.abspath(__file__))
+logger.debug(f"Current directory: {base_dir}")
+sys.path.insert(0, base_dir)
 
-# Set environment variables
-os.environ['FLASK_ENV'] = 'production'
-os.environ['FLASK_DEBUG'] = '1'
-
-# Log Python path for debugging
-logger.debug(f"Python path: {sys.path}")
-
+# Explicitly import the Flask application
 try:
-    # Import Flask app
-    logger.debug("Importing app from quantum_hermetic_gematria.app")
-    from quantum_hermetic_gematria.app import app
+    logger.debug("Attempting to import Flask app...")
+    from quantum_hermetic_gematria.app import app as application
     
-    # Print available routes for debugging
-    logger.debug("Available routes:")
-    for rule in app.url_map.iter_rules():
-        logger.debug(f"Route: {rule.endpoint} - {rule}")
+    # For Gunicorn compatibility
+    app = application
     
-    logger.debug("Successfully imported app")
+    # Debug information
+    logger.debug("Flask app successfully imported")
+    logger.debug(f"Registered routes: {[rule.endpoint for rule in app.url_map.iter_rules()]}")
+    logger.debug(f"Static folder: {app.static_folder}")
+    logger.debug(f"Template folder: {app.template_folder}")
 except Exception as e:
-    logger.error(f"Error importing app: {str(e)}", exc_info=True)
+    logger.error(f"Failed to import Flask app: {str(e)}", exc_info=True)
     raise
 
-# This allows Gunicorn to find the app variable
+# Direct execution (not via Gunicorn)
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    logger.debug(f"Starting app on port {port}")
+    logger.debug(f"Starting Flask app on port {port}...")
     app.run(host="0.0.0.0", port=port, debug=True) 
