@@ -3,7 +3,7 @@ services:
     name: dogsTOOLomg
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: bash start.sh
+    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app --log-level debug
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.7

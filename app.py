@@ -1,13 +1,8 @@
-import os
-import sys
+# This is a simple WSGI file that imports the Flask app from the quantum_hermetic_gematria directory
 
-# Add the application directory to the Python path
-current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, current_dir)
-
-# Import the app from the correct module
+# Import Flask app
 from quantum_hermetic_gematria.app import app
 
+# This allows Gunicorn to find the app variable
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port) 
+    app.run() 

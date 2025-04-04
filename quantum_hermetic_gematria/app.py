@@ -1,12 +1,15 @@
 import os
-import math
-import numpy as np
 import torch
+import numpy as np
 from flask import Flask, render_template, request, jsonify, session
 import json
 from datetime import datetime
 
-# Simplified implementation directly in the app file
+# Create the Flask app
+app = Flask(__name__)
+app.secret_key = os.urandom(24)  # For session management
+
+# Simple QuantumHermeticGematria implementation
 class QuantumHermeticGematria:
     def __init__(self, dimension=10, seed=42):
         self.dimension = dimension
@@ -16,14 +19,12 @@ class QuantumHermeticGematria:
         self.initialize_vectors()
     
     def initialize_vectors(self):
-        """Initialize quantum vectors for gematria calculations"""
         self.vectors = {}
         for i, char in enumerate("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"):
             vec = torch.randn(self.dimension)
             self.vectors[char] = vec / torch.norm(vec)
     
     def calculate(self, text):
-        """Calculate the quantum gematria value for the given text"""
         text = text.upper()
         result = torch.zeros(self.dimension)
         for char in text:
@@ -34,16 +35,13 @@ class QuantumHermeticGematria:
         return result
     
     def calculate_similarity(self, text1, text2):
-        """Calculate similarity between two texts"""
         vec1 = self.calculate(text1)
         vec2 = self.calculate(text2)
         similarity = torch.dot(vec1, vec2)
         return similarity.item()
     
     def analyze_text(self, text):
-        """Analyze text using quantum hermetic principles"""
         vector = self.calculate(text)
-        # Simple result with interpretation
         return {
             "text": text,
             "numerical_value": int(torch.sum(vector * 100).item()),
@@ -61,11 +59,9 @@ class QuantumHermeticGematria:
         }
     
     def compare_phrases(self, phrase1, phrase2):
-        """Compare two phrases using quantum hermetic gematria"""
         similarity = self.calculate_similarity(phrase1, phrase2)
         compatibility = int((similarity + 1) * 50)  # Convert from [-1,1] to [0,100]
         
-        # Simple interpretation based on similarity
         if similarity > 0.5:
             interpretation = "These phrases share significant energetic harmony."
         elif similarity > 0:
@@ -85,10 +81,7 @@ class QuantumHermeticGematria:
             "interpretation": interpretation
         }
 
-app = Flask(__name__)
-app.secret_key = os.urandom(24)  # For session management
-
-# Initialize QHG
+# Initialize QHG instance
 qhg = QuantumHermeticGematria()
 
 @app.route('/')
@@ -97,49 +90,55 @@ def index():
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    data = request.get_json()
-    text = data.get('text', '')
-    
-    # Perform analysis
-    result = qhg.analyze_text(text)
-    
-    # Store in session history
-    if 'history' not in session:
-        session['history'] = []
-    
-    analysis_entry = {
-        'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        'text': text,
-        'result': result
-    }
-    
-    session['history'] = [analysis_entry] + session['history'][:9]  # Keep last 10 entries
-    
-    return jsonify(result)
+    try:
+        data = request.get_json()
+        text = data.get('text', '')
+        
+        # Perform analysis
+        result = qhg.analyze_text(text)
+        
+        # Store in session history
+        if 'history' not in session:
+            session['history'] = []
+        
+        analysis_entry = {
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'text': text,
+            'result': result
+        }
+        
+        session['history'] = [analysis_entry] + session['history'][:9]
+        
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/compare', methods=['POST'])
 def compare():
-    data = request.get_json()
-    phrase1 = data.get('phrase1', '')
-    phrase2 = data.get('phrase2', '')
-    
-    # Perform comparison
-    result = qhg.compare_phrases(phrase1, phrase2)
-    
-    # Store in session history
-    if 'comparisons' not in session:
-        session['comparisons'] = []
-    
-    comparison_entry = {
-        'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        'phrase1': phrase1,
-        'phrase2': phrase2,
-        'result': result
-    }
-    
-    session['comparisons'] = [comparison_entry] + session['comparisons'][:9]
-    
-    return jsonify(result)
+    try:
+        data = request.get_json()
+        phrase1 = data.get('phrase1', '')
+        phrase2 = data.get('phrase2', '')
+        
+        # Perform comparison
+        result = qhg.compare_phrases(phrase1, phrase2)
+        
+        # Store in session history
+        if 'comparisons' not in session:
+            session['comparisons'] = []
+        
+        comparison_entry = {
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'phrase1': phrase1,
+            'phrase2': phrase2,
+            'result': result
+        }
+        
+        session['comparisons'] = [comparison_entry] + session['comparisons'][:9]
+        
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/history')
 def history():
