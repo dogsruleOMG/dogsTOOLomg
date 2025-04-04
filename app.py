@@ -22,6 +22,19 @@ try:
     # For Gunicorn compatibility
     app = application
     
+    # Add static file route at root level
+    from flask import send_from_directory
+    
+    @app.route('/static/<path:filename>')
+    def root_static_files(filename):
+        static_folder = os.path.join(base_dir, 'quantum_hermetic_gematria', 'static')
+        logger.debug(f"Root serving static file: {filename} from {static_folder}")
+        try:
+            return send_from_directory(static_folder, filename)
+        except Exception as e:
+            logger.error(f"Root error serving static file {filename}: {str(e)}")
+            return f"Error serving static file: {str(e)}", 500
+    
     # Debug information
     logger.debug("Flask app successfully imported")
     logger.debug(f"Registered routes: {[rule.endpoint for rule in app.url_map.iter_rules()]}")

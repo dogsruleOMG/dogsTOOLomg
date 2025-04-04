@@ -218,11 +218,33 @@ def index():
 def static_files(filename):
     logger.debug(f"Serving static file: {filename} from {app.static_folder}")
     try:
-        return send_from_directory(app.static_folder, filename)
+        filepath = os.path.join(app.static_folder, filename)
+        if os.path.exists(filepath):
+            with open(filepath, 'r', encoding='utf-8') as f:
+                content = f.read()
+                
+            logger.debug(f"Static file content length: {len(content)}")
+            
+            mime_type = 'text/css' if filename.endswith('.css') else 'application/javascript'
+            
+            response = app.response_class(
+                response=content,
+                status=200,
+                mimetype=mime_type
+            )
+            
+            response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+            response.headers['Pragma'] = 'no-cache'
+            response.headers['Expires'] = '0'
+            
+            return response
+        else:
+            logger.error(f"Static file not found: {filepath}")
+            return f"File not found: {filename}", 404
     except Exception as e:
         logger.error(f"Error serving static file {filename}: {str(e)}")
         logger.error(traceback.format_exc())
-        return f"Error serving static file: {str(e)}", 404
+        return f"Error serving static file: {str(e)}", 500
 
 @app.route('/analyze', methods=['POST'])
 def analyze():

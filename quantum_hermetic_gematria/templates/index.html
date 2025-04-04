@@ -8,12 +8,72 @@
     <meta http-equiv="Expires" content="0">
     <title>Quantum Hermetic Gematria</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css?v=1001">
+    <link rel="stylesheet" href="/static/css/style.css?v=1002&t={{ range(1, 999999) | random }}">
+    <style>
+        /* Fallback styles in case the CSS doesn't load */
+        .info-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 8px 16px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        
+        .energy-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .energy-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .bar-container {
+            flex-grow: 1;
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+        }
+        
+        .bar-fill {
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 5px;
+        }
+        
+        .info-icon {
+            cursor: help;
+            position: relative;
+            margin-left: 5px;
+        }
+        
+        .tooltip-text {
+            position: absolute;
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            width: 200px;
+            font-size: 12px;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
         <header>
             <h1>Quantum Hermetic Gematria</h1>
+            <button class="info-btn" onclick="showInfoModal()"><span>ℹ️</span> How It Works</button>
             <nav>
                 <button class="tab-btn active" data-tab="analyze">Single Analysis</button>
                 <button class="tab-btn" data-tab="compare">Compare Phrases</button>
@@ -62,7 +122,107 @@
             </section>
         </main>
     </div>
+    
+    <!-- Info Modal -->
+    <div id="infoModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+        <div style="background-color: white; margin: 10% auto; padding: 20px; border-radius: 10px; width: 80%; max-width: 800px;">
+            <span style="float: right; font-size: 24px; font-weight: bold; cursor: pointer;" onclick="hideInfoModal()">&times;</span>
+            <h2>Quantum Hermetic Gematria Formula</h2>
+            
+            <div style="margin-top: 20px;">
+                <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+                    <h3 style="color: #3498db;">1. Text to Vector Transformation</h3>
+                    <p>Your text is converted to a quantum vector by:</p>
+                    <div style="background-color: #f9f9f9; padding: 10px; border-radius: 5px; font-family: monospace; color: #e74c3c;">Text → Character mapping → Normalized vectors → Combined resonance field</div>
+                </div>
+                
+                <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+                    <h3 style="color: #3498db;">2. Pattern Recognition</h3>
+                    <p>The vector is analyzed for hermetic patterns:</p>
+                    <div style="background-color: #f9f9f9; padding: 10px; border-radius: 5px; font-family: monospace; color: #e74c3c;">Vector → Pattern matching → Geometric alignment → Significance calculation</div>
+                </div>
+                
+                <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+                    <h3 style="color: #3498db;">3. Quantum Resonance</h3>
+                    <p>The vibrational coherence is measured by:</p>
+                    <div style="background-color: #f9f9f9; padding: 10px; border-radius: 5px; font-family: monospace; color: #e74c3c;">Vector magnitude × Harmonic alignment × Divine proportions</div>
+                </div>
+                
+                <div>
+                    <h3 style="color: #3498db;">4. Interpretation Matrix</h3>
+                    <p>Results are mapped to traditional hermetic principles:</p>
+                    <div style="background-color: #f9f9f9; padding: 10px; border-radius: 5px; font-family: monospace; color: #e74c3c;">Normalized vector → Hermetic correspondences → Pattern classification</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <script src="/static/js/app.js?v=1001"></script>
+    <script src="/static/js/app.js?v=1002&t={{ range(1, 999999) | random }}"></script>
+    
+    <!-- Fallback script in case the JS doesn't load -->
+    <script>
+        function showInfoModal() {
+            document.getElementById('infoModal').style.display = 'block';
+        }
+        
+        function hideInfoModal() {
+            document.getElementById('infoModal').style.display = 'none';
+        }
+        
+        // Basic tab switching if the main JS doesn't load
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.getAttribute('data-tab');
+                    
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Analyze functionality
+            const analyzeBtn = document.getElementById('analyze-btn');
+            if (analyzeBtn) {
+                analyzeBtn.addEventListener('click', async () => {
+                    const text = document.getElementById('analysis-input').value.trim();
+                    if (!text) return;
+                    
+                    const results = document.getElementById('analysis-results');
+                    results.innerHTML = '<div style="text-align: center;">Loading...</div>';
+                    
+                    try {
+                        const response = await fetch('/analyze', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ text })
+                        });
+                        const result = await response.json();
+                        
+                        results.innerHTML = `
+                            <div style="background-color: #ecf0f1; border-radius: 10px; padding: 15px; margin-bottom: 10px;">
+                                <h3 style="color: #3498db; margin-bottom: 10px;">"${text}"</h3>
+                                <p><strong>Quantum Resonance:</strong> ${result.quantum_resonance}</p>
+                                <p><strong>Pattern Significance:</strong> ${result.pattern_significance}</p>
+                                <h4 style="margin-top: 15px;">Interpretation</h4>
+                                <p><strong>Primary Pattern:</strong> ${result.interpretation.primary_pattern}</p>
+                                <p><strong>Resonance Quality:</strong> ${result.interpretation.resonance_quality}</p>
+                                <p><strong>Geometric Harmony:</strong> ${result.interpretation.geometric_harmony}</p>
+                            </div>
+                        `;
+                    } catch (error) {
+                        results.innerHTML = '<div style="color: red;">Analysis failed. Please try again.</div>';
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html> 
